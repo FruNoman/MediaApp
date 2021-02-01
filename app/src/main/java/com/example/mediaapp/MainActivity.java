@@ -1,6 +1,7 @@
 package com.example.mediaapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -42,14 +43,16 @@ public class MainActivity extends AppCompatActivity {
                 .requestPermissions(
                         MainActivity.this,
                         new String[]{
-
+                                Manifest.permission.BLUETOOTH,
+                                Manifest.permission.BLUETOOTH_ADMIN,
+                                Manifest.permission.MODIFY_AUDIO_SETTINGS,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.RECORD_AUDIO
                         },
                         1);
 
-        uri = Uri.parse("/storage/emulated/10/samples/audio/A_000001_02_Tetanus.mp3");
+        uri = Uri.parse("/storage/emulated/0/samples/audio/A_000001_02_Tetanus.mp3");
         squareBarVisualizer = findViewById(R.id.visualizer);
         play = findViewById(R.id.play);
         stop = findViewById(R.id.stop);
@@ -103,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 // Set Spacing
         squareBarVisualizer.setGap(2);
 
+
+        startService(new Intent(this, MediaPlaybackService.class));
+
 // Set your media player to the visualizer.
     }
 
@@ -143,11 +149,13 @@ public class MainActivity extends AppCompatActivity {
 
     void playSong() throws Exception {
         mediaPlayer.reset();
-        Uri path = Uri.parse(songs.get(nowPlaying).getData());
+        Uri path =       Uri.parse("/storage/emulated/0/samples/audio/A_000001_02_Tetanus.mp3");
+
         mediaPlayer.setDataSource(String.valueOf(path));
         mediaPlayer.prepare();
         mediaPlayer.seekTo(seekLength);
         mediaPlayer.start();
+        trackName.setText(songs.get(nowPlaying).getTitle());
         squareBarVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
 
     }

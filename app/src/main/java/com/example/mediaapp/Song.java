@@ -18,4 +18,8 @@ public class Song {
     public String getData(){
         return this.data;
     }
+
+    public String getTitle() {
+        return title;
+    }
 }
